@@ -1,0 +1,383 @@
+@import url('https://unpkg.com/normalize.css') layer(normalize);
+
+@layer normalize, base, demo;
+
+@layer demo {
+  :root {
+    --accent: hsl(200 80% 50%);
+    --border: color-mix(in oklch, canvas, canvasText 15%);
+    --background: color-mix(in oklch, canvas, canvasText 2%);
+    --head: light-dark(hsl(0 0% 98%), canvas);
+    --selected: color-mix(in oklch, var(--accent), canvas 85%);
+    --color: color-mix(in hsl, canvasText, #0000 50%);
+    --hover-background: light-dark(hsl(0 0% 92%), hsl(0 0% 10%));
+    --sibling-hover: red;
+    --hover-color: green;
+  }
+  .members {
+    background: light-dark(#fff, #000);
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+        /* display: flex
+;
+    flex-direction: column;
+    align-items: flex-end; */
+  }
+  table {
+    font-size: 0.875rem;
+    border-collapse: collapse;
+    background: #0000;
+    color: var(--color);
+  }
+  input {
+    color: var(--color);
+  }
+  table:focus-within tbody tr:not(:focus-within) {
+    filter: blur(4px) saturate(0.2);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  tr:focus-within {
+    background: var(--selected);
+    td,
+    input {
+      color: canvasText;
+    }
+  }
+  thead {
+    background: var(--head);
+  }
+  th,
+  td:first-of-type {
+    padding: 0.25rem 1rem;
+  }
+  :is(td, th) {
+    height: 40px;
+  }
+  td {
+    font-weight: 300;
+  }
+  tr {
+    transition-property: filter, background, opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid var(--head);
+    }
+  }
+
+  table :is(td, th) {
+    white-space: nowrap;
+    font-weight: 400;
+    font-size: 0.875rem;
+  }
+  table th {
+    text-align: left;
+    font-weight: 500;
+    color: color-mix(in hsl, canvasText, #0000 35%);
+  }
+  thead {
+    background: var(--head);
+  }
+
+  td:not(:has(input)) {
+    padding: 0.5rem 1rem;
+  }
+
+  tr:focus-within input:hover:not(:focus-visible) {
+    background: color-mix(in oklch, var(--accent), #0000 75%);
+  }
+
+  table input {
+    font-size: inherit;
+    height: 40px;
+    font-weight: inherit;
+    border: 0;
+    padding: 0.5rem 1rem;
+    height: 100%;
+    background: #0000;
+    border-radius: 0;
+    caret-color: var(--accent);
+    transition: color 0.26s ease-out;
+
+    &:hover:not(:focus-visible) {
+      background: var(--hover-background);
+    }
+    &::selection {
+      background: var(--accent);
+      color: white;
+    }
+    &:focus-visible {
+      background: light-dark(#fff, #000);
+      outline: 2px solid var(--accent);
+    }
+  }
+
+  input:not(:focus, :focus-visible) {
+    cursor: pointer;
+  }
+  table img {
+    border-radius: 50%;
+    width: 24px;
+    aspect-ratio: 1;
+  }
+}
+
+@layer base {
+  :root {
+    --font-size-min: 16;
+    --font-size-max: 20;
+    --font-ratio-min: 1.2;
+    --font-ratio-max: 1.33;
+    --font-width-min: 375;
+    --font-width-max: 1500;
+  }
+
+  html {
+    color-scheme: light dark;
+  }
+
+  [data-theme='light'] {
+    color-scheme: light only;
+  }
+
+  [data-theme='dark'] {
+    color-scheme: dark only;
+  }
+
+  :where(.fluid) {
+    --fluid-min: calc(
+      var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
+    );
+    --fluid-max: calc(
+      var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
+    );
+    --fluid-preferred: calc(
+      (var(--fluid-max) - var(--fluid-min)) /
+        (var(--font-width-max) - var(--font-width-min))
+    );
+    --fluid-type: clamp(
+      (var(--fluid-min) / 16) * 1rem,
+      ((var(--fluid-min) / 16) * 1rem) -
+        (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
+        (var(--fluid-preferred) * var(--variable-unit, 100vi)),
+      (var(--fluid-max) / 16) * 1rem
+    );
+    font-size: var(--fluid-type);
+  }
+
+  *,
+  *:after,
+  *:before {
+    box-sizing: border-box;
+  }
+
+  body {
+    background: light-dark(#fff, #000);
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
+      Helvetica, Arial, sans-serif, system-ui;
+  }
+
+
+
+  .bear-link {
+    color: canvasText;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 48px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    opacity: 0.8;
+  }
+
+  :where(.x-link, .bear-link):is(:hover, :focus-visible) {
+    opacity: 1;
+  }
+
+  .bear-link svg {
+    width: 75%;
+  }
+
+  /* Utilities */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+.submit_out {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+}
+.addTaskBtn, .submit_out {
+ padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  background-color: #0e232e;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  margin: 10px;
+
+}
+
+.addTaskBtn:hover, .submit_out:hover {
+  background-color: hsl(200, 80%, 45%);
+}
+
+.addTaskBtn:active, .submit_out:active {
+  transform: scale(0.98);
+}
+
+.addTaskBtn:focus-visible, .submit_out:focus-visible {
+  outline: 2px solid hsl(200, 100%, 70%);
+  outline-offset: 2px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  font-family: monospace;
+  opacity: .5;
+}
+
+
+
+body {
+  align-items: center;
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+.loginForm {
+  background-color: #15172b;
+  border-radius: 20px;
+  box-sizing: border-box;
+  height: 500px;
+  padding: 20px;
+  width: 320px;
+}
+
+.title {
+  color: #eee;
+  align-items: center;
+  font-family: sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  margin-top: 30px;
+}
+
+
+.input-container {
+  height: 50px;
+  position: relative;
+  width: 100%;
+}
+
+.ic1 {
+  margin-top: 40px;
+}
+
+.ic2 {
+  margin-top: 30px;
+}
+
+.input {
+  background-color: #303245;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  font-size: 18px;
+  height: 100%;
+  outline: 0;
+  padding: 4px 20px 0;
+  width: 100%;
+}
+
+.cut {
+  background-color: #15172b;
+  border-radius: 10px;
+  height: 20px;
+  left: 20px;
+  position: absolute;
+  top: -20px;
+  transform: translateY(0);
+  transition: transform 200ms;
+  width: 76px;
+}
+
+.cut-short {
+  width: 50px;
+}
+
+.input:focus ~ .cut,
+.input:not(:placeholder-shown) ~ .cut {
+  transform: translateY(8px);
+}
+
+.placeholder {
+  color: #65657b;
+  font-family: sans-serif;
+  left: 20px;
+  line-height: 14px;
+  pointer-events: none;
+  position: absolute;
+  transform-origin: 0 50%;
+  transition: transform 200ms, color 200ms;
+  top: 20px;
+}
+
+.input:focus ~ .placeholder,
+.input:not(:placeholder-shown) ~ .placeholder {
+  transform: translateY(-30px) translateX(10px) scale(0.75);
+}
+
+.input:not(:placeholder-shown) ~ .placeholder {
+  color: #808097;
+}
+
+.input:focus ~ .placeholder {
+  color: #dc2f55;
+}
+
+.submit {
+  background-color: #08d;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  cursor: pointer;
+  font-size: 18px;
+  height: 50px;
+  margin-top: 38px;
+  outline: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.submit:active {
+  background-color: #06b;
+}
